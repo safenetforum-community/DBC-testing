@@ -31,10 +31,12 @@ $SAFE_BIN/safe networks
 $SAFE_BIN/safe networks check
 $SAFE_BIN/safe networks sections
 $SAFE_BIN/safe keys create --for-cli --json  
-safe wallet create
-#STASH=$($SAFE_BIN/safe wallet create |echo $(grep -oP '(?<=Wallet created at:).*')|awk '{gsub(/^"|"$/, "", $0); print $0}') 
-
-echo "The faucet wallet is at address: "$STASH
+#safe wallet create
+STASH=$($SAFE_BIN/safe wallet create |echo $(grep -oP '(?<=Wallet created at:).*')|awk '{gsub(/^"|"$/, "", $0); print $0}') 
+scho ""
+echo ""
+echo "The master wallet is at address: "$STASH
 echo "============================================"
 $SAFE_BIN/safe wallet deposit --dbc ~/.safe/node/baby-fleming-nodes/sn-node-genesis/genesis_dbc $STASH
+echo ""
 $SAFE_BIN/safe wallet balance $STASH
