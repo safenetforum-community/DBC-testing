@@ -11,3 +11,11 @@ The script will set up a 20 node baby-fleming local network,
 create a keypair and wallet, then deposit the genesis DBC to  
 the master wallet.  
 TODO: Make QTY_NODES configureable  
+
+
+## populate.sh
+
+This wee script creates keypairs and wallets and saves the output to a json file.
+Well it will when it is working properly ...
+Intended to use the safe nrs command to create a network address for each account 
+and store the keys and wallet address at a human-readable location on the SAFE network 
