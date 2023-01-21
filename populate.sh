@@ -8,7 +8,7 @@
 export RUST_LOG=sn_node=info # This filters the output for stdout/files, not OTLP
 #export RUST_LOG_OTLP=sn_node=trace # This filters what is sent to OTLP endpoint     
 export SAFE_ROOT=$HOME/.safe
-export SAFE_BIN=$SAFE_ROOT/cli
+export SAFE_BIN=/usr/local/bin
 export ACCTS=$SAFE_ROOT/accounts
 export RUNDATA=$SAFE_ROOT/testcreds
 cd $SAFE_ROOT
