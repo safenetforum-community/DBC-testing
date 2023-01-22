@@ -10,7 +10,24 @@ export RUST_LOG=sn_node=info # This filters the output for stdout/files, not OTL
 export SAFE_ROOT=$HOME/.safe
 export SAFE_BIN=/usr/local/bin
 export TESTNET_NAME=baby-fleming
-export NODES_QTY=20
+# export NODES_QTY=20
+sudo apt install trash-cli jq
+
+while :; do
+  read -p "How many nodes [20]?: " NODES_QTY
+  NODES_QTY=${NODES_QTY:-20} 
+  [[ $NODES_QTY =~ ^[0-9]+$ ]] || { echo "Enter a valid number"; continue; }
+     if ((NODES_QTY >= 11 && NODES_QTY <= 50)); then
+       echo "OK"
+       break
+     else
+       echo "Choose between 11 and 50 nodes"
+     fi
+done
+
+
+
+
 #clean up from any previous run
 $SAFE_BIN/safe node killall
 cd $SAFE_ROOT/node
