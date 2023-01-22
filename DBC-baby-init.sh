@@ -11,7 +11,11 @@ export SAFE_ROOT=$HOME/.safe
 export SAFE_BIN=/usr/local/bin
 export TESTNET_NAME=baby-fleming
 # export NODES_QTY=20
-sudo apt install trash-cli jq
+
+
+
+
+# sudo apt install trash-cli jq
 
 while :; do
   read -p "How many nodes [20]?: " NODES_QTY
@@ -25,6 +29,18 @@ while :; do
      fi
 done
 
+echo "Checking if trash-cli and jq are installed ..."
+echo ""
+# install trash-cli and jq if not already installed
+if [ ! -f /usr/bin/trash-cli ] 
+then 
+   sudo apt install trash-cli
+fi 
+
+if [ ! -f /usr/bin/jq ] 
+then 
+   sudo apt install jq
+fi 
 
 
 
