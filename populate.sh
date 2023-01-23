@@ -22,7 +22,7 @@ rm -v *.txt
 for i in {1..5}
 do 
   touch account_$i.txt
-  acct=$(($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
+  acct=$($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
   pubk=$($SAFE_BIN/safe keys create  --json| jq '.[0]') 
   wurl=$( $SAFE_BIN/safe wallet create --json)
   echo $acct > account_$i.txt
