@@ -18,48 +18,35 @@ echo $STASH
 
 cd $ACCTS
 rm -v *.txt 
-#([[ -f "*.txt" ]] && rm --recursive --verbose "*.txt" || exit 0)
-#touch accounts.json
-#echo '{ "object" : "List of accounts", [' >> accounts.json
 
-
-for i in {1490..1495}
-do
-  #echo "---------------------------------------------------"
+for i in {1..5}
+do 
   touch account_$i.txt
-  acct=$(safe nrs register --json account_$i |jq '.[0]')
-  echo $acct > account_$i.txt
-  #echo '{"account_'$i'" :'$acct ',' >> accounts.json
-
+  acct=$(($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
   pubk=$($SAFE_BIN/safe keys create  --json| jq '.[0]') 
-  echo $pubk >> account_$i.txt
-  #echo '"publicKey" : '$pubk',' >> accounts.json
-
   wurl=$( $SAFE_BIN/safe wallet create --json)
+  echo $acct > account_$i.txt
+  echo $pubk >> account_$i.txt
   echo $wurl >> account_$i.txt
- # echo '"walletUrl" : ' $wurl '},' >> accounts.json
   echo "----------------------------------------------------"
   echo ""
 done
 
-#echo   "]}" >> accounts.json
-
-#$SAFE_BIN/safe files put $ACCTS/accounts.json
-
-ls -al .
-
-
 for files in $ACCTS/*
-  do
-  nrs_acct=$( head -n1 $files)
+do
+  nrs_acct=$( head -n 1 $files)
+  pubk=$( tail -n 2 $files | head -n1)
+  wurl=$( tail -n 1 $files)
+  echo "----------------------------------------------------"
   echo $nrs_acct
-  pubk=$(tail -n2 $files| head -n1)
   echo $pubk
-  wurl=$( tail -n1 $files)
+  wurl=$(echo $wurl| sed 's/^\"\|\"$//g')
   echo $wurl
 
-  safe wallet reissue --json --from $STASH 42 > dbc
-  safe wallet deposit --json --dbc ./dbc $wurl 
-
-
+  #everyone should get a slice of pi
+  $SAFE_BIN/safe wallet reissue --json --from $STASH 3.1415922 > ./dbc
+  $SAFE_BIN/safe wallet deposit --json --dbc ./dbc $wurl 
+  $SAFE_BIN/safe wallet balance $STASH
+  $SAFE_BIN/safe wallet balance $wurl
+  echo "----------------------------------------------------"
 done  
