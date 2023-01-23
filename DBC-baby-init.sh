@@ -36,14 +36,16 @@ else
   echo "All packages already installed"
 fi
 
+
 while :; do
-  read -p "How many nodes (1 - 50)?: " NODES_QTY
+  read -p "How many nodes [20]?: " NODES_QTY
+  NODES_QTY=${NODES_QTY:-20} 
   [[ $NODES_QTY =~ ^[0-9]+$ ]] || { echo "Enter a valid number"; continue; }
-     if ((NODES_QTY >= 1 && NODES_QTY <= 50)); then
+     if ((NODES_QTY >= 11 && NODES_QTY <= 50)); then
        echo "OK"
        break
      else
-       echo "Number out of range, try again"
+       echo "Choose between 11 and 50 nodes"
      fi
 done
 
@@ -52,14 +54,11 @@ done
 $SAFE_BIN/safe node killall > /dev/null
 cd $SAFE_ROOT/node
 trash-put -r -v ./baby* ./local*
-#$SAFE_BIN/safe config clear
 
 echo "============================================"
 echo ""
 echo "Allow time for all "$NODES_QTY" nodes to be started"
-
 $SAFE_BIN/safe node run-baby-fleming --nodes $NODES_QTY
-
 echo ""
 echo "============================================================="
 
@@ -77,4 +76,3 @@ echo $STASH > $WALLET_DATA
 echo "============================================"
 $SAFE_BIN/safe wallet deposit --dbc ~/.safe/node/baby-fleming-nodes/sn-node-genesis/genesis_dbc $STASH
 echo ""
-$SAFE_BIN/safe wallet balance $STASH
