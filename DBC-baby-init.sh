@@ -2,7 +2,7 @@
 
 # runs initial safe commands to start a clean network 
 # create a master wallet to hold genesis DBC
- 
+
 set_env_vars () {
     #export OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4317" # Already the default
     export RUST_LOG=sn_node=info # This filters the output for stdout/files, not OTLP
@@ -11,18 +11,19 @@ set_env_vars () {
     export SAFE_BIN=/usr/local/bin
     export TESTNET_NAME=baby-fleming
     export WALLET_DATA=$SAFE_ROOT/testcreds.txt
+    export ACCTS=$SAFE_ROOT/accounts/
 }
 
 intro () {
     echo ""
     echo ""
-    echo "This script will remove all previous data from .safe/nodes/"
-    echo ""
+    echo "This script will remove all previous data from .safe/nodes/"   
     echo "and check for and install trash-cli and jq packages"
     echo ""
     echo ""
     echo ""
-echo ""
+    echo ""
+    echo ""
 }
 
 check_packages () {
@@ -60,6 +61,10 @@ get_nodes_qty () {
 clean_up () {
     #clean up from any previous run
     $SAFE_BIN/safe node killall > /dev/null
+     [ -f "$WALLET_DATA " ] && rm -v $WALLET_DATA   #make sure this is cleared    
+    echo ""
+    echo ""
+    sleep 1
     cd $SAFE_ROOT/node
     trash-put -r -v ./baby* ./local*
 }
@@ -68,6 +73,12 @@ init_network () {
     echo "============================================"
     echo ""
     echo "Allow time for all "$NODES_QTY" nodes to be started"
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
     $SAFE_BIN/safe node run-baby-fleming --nodes $NODES_QTY
     echo ""
     echo "============================================================="
@@ -78,11 +89,12 @@ check_network () {
     $SAFE_BIN/safe networks
     $SAFE_BIN/safe networks check
     $SAFE_BIN/safe networks sections
+    
 }
 
 
 init_stash () {
-    $SAFE_BIN/safe keys create --for-cli --json  
+    $SAFE_BIN/safe keys create --for-cli #--json  
     STASH=$($SAFE_BIN/safe wallet create  |echo $(grep -oP '(?<=Wallet created at:).*')|awk '{gsub(/^"|"$/, "", $0); print $0}') 
     echo $STASH > $WALLET_DATA
     echo ""
@@ -90,6 +102,7 @@ init_stash () {
     echo "The master wallet is at address: "$STASH
     $SAFE_BIN/safe wallet deposit --dbc ~/.safe/node/baby-fleming-nodes/sn-node-genesis/genesis_dbc $STASH
     echo "============================================"
+    ls -l $WALLET_DATA
 }
 
 set_env_vars
@@ -99,6 +112,9 @@ get_nodes_qty
 clean_up
 init_network
 check_network
+
+sleep 2
+
 init_stash
 
 exit 0
