@@ -9,6 +9,6 @@ create a keypair and wallet, then deposit the genesis DBC to the master wallet.
 
 ## populate.sh
 
-This wee script creates keypairs and wallets and saves the output to a json file.
-Well it will when it is working properly ...
-Intended to use the safe nrs command to create a network address for each account and store the keys and wallet address at a human-readable location on the SAFE network  
+This  script creates accounts  consisting of keypairs and wallets and saves the output to a file.
+
+the payout function loops through the files in the $ACCTS dir and sends some test SNT from the master wallet to each account.
