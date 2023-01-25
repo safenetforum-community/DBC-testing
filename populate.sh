@@ -12,26 +12,21 @@ set_env_vars () {
     export SAFE_BIN=/usr/local/bin
     export TESTNET_NAME=baby-fleming
     export WALLET_DATA=$SAFE_ROOT/testcreds.txt
-    export ACCTS=$SAFE_ROOT/accounts/
-    echo "done set_env_vars"
+    export ACCTS=/tmp/ACCTS
+    #echo "done set_env_vars"
 }
 
 
 check_stash () {
   cd $SAFE_ROOT
   export STASH=$(cat $WALLET_DATA)
-  echo "done check Stash" $STASH
-  # less $STASH
+  echo "done check Stash at " $STASH
 }
 
 init_accts () {
-  #[ ! -d "$ACCTS" ] && mkdir $ACCTS  
+  [ ! -d "$ACCTS" ] && mkdir $ACCTS  
   cd $ACCTS
   rm -v *.txt
-  sleep 2
-  ls -l . 
-  pwd
-  sleep 5
 }
 
 get_accts_qty () {
@@ -50,58 +45,38 @@ get_accts_qty () {
 
 create_accts () {
   cd $ACCTS
-  for i in {11..14}
+  for i in {1..100}
   do 
-    touch account_$i.txt
     acct=$($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
     pubk=$($SAFE_BIN/safe keys create  --json| jq '.[0]') 
     wurl=$( $SAFE_BIN/safe wallet create --json)
     echo "----- " account_$i " --------------------------------------"
-    echo $acct > account_$i.txt
-    echo $pubk >> account_$i.txt
-    echo $wurl >> account_$i.txt
-    echo $acct
-    echo $pubk
-    echo $wurl
-    echo "----------------------------------------------------"
     echo ""
-    #payout
+    echo ""
+    payout
   done
 }
 
 payout () {
-  #cd $ACCTS
-  ls -l .
-  for files in $ACCTS/*.txt
-  do
-    nrs_acct=$( head -n 1 $files)
-    pubk=$( tail -n 2 $files | head -n1)
-    wurl=$( tail -n 1 $files)
-    echo "---------- print  nrs_acct, pubk, wurl ---------------"
-    echo $nrs_acct
-    echo $pubk
-    wurl=$(echo $wurl| sed 's/^\"\|\"$//g')
-    echo $wurl
+  cd $ACCTS
+   
+  wurl=$(echo $wurl| sed 's/^\"\|\"$//g')
+  echo " Payout to : "$wurl
 
     #everyone should get a slice of pi
-    $SAFE_BIN/safe wallet reissue --json --from $STASH 3.1415922 > ./dbc
-    ls -l >./dbc
-    $SAFE_BIN/safe wallet deposit --json --dbc ./dbc $wurl 
-    echo $($SAFE_BIN/safe wallet balance $STASH)
+
+    payout_dbc=$($SAFE_BIN/safe wallet reissue --json --from $STASH 3.1415922)
+    $SAFE_BIN/safe wallet deposit --json --dbc $payout_dbc $wurl 
+    echo "Master "$($SAFE_BIN/safe wallet balance $STASH)
     echo "----------------------------------------------------"
     $SAFE_BIN/safe wallet balance $wurl
     echo "----------------------------------------------------"
-done  
+
 }
 
 set_env_vars
 check_stash
 init_accts
-sleep 3
 get_accts_qty
-sleep 3
 create_accts
-sleep 3
-payout
-
 exit 0

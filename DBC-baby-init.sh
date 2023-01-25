@@ -11,7 +11,7 @@ set_env_vars () {
     export SAFE_BIN=/usr/local/bin
     export TESTNET_NAME=baby-fleming
     export WALLET_DATA=$SAFE_ROOT/testcreds.txt
-    export ACCTS=$SAFE_ROOT/accounts/
+    export ACCTS=/tmp/ACCTS
 }
 
 intro () {
