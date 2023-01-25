@@ -19,8 +19,9 @@ set_env_vars () {
 
 check_stash () {
   cd $SAFE_ROOT
-  STASH=$(cat $WALLET_DATA)
+  export STASH=$(cat $WALLET_DATA)
   echo "done check Stash" $STASH
+  # less $STASH
 }
 
 init_accts () {
@@ -49,7 +50,7 @@ get_accts_qty () {
 
 create_accts () {
   cd $ACCTS
-  for i in {113..114}
+  for i in {11..14}
   do 
     touch account_$i.txt
     acct=$($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
@@ -64,6 +65,7 @@ create_accts () {
     echo $wurl
     echo "----------------------------------------------------"
     echo ""
+    #payout
   done
 }
 
