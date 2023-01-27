@@ -9,6 +9,11 @@ create a keypair and wallet, then deposit the genesis DBC to the master wallet.
 
 ## populate.sh
 
-This  script creates accounts  consisting of keypairs and wallets and saves the output to a file.
+This  script creates accounts  consisting of keypairs and wallets and saves the output to a series of .csv files.
 
 the payout function loops through the files in the $ACCTS dir and sends some test SNT from the master wallet to each account.
+
+
+## populate-comnet.sh
+
+Same as above but hacked to run on a community testnet - comnet
