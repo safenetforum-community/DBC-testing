@@ -23,13 +23,13 @@ cd $ACCTS
 
 for i in {1..20}
 do 
-  acct=$($SAFE_BIN/safe nrs register --json $BASENAME_$i |jq '.[0]')
+  acct=$($SAFE_BIN/safe nrs register --json $BASENAME$i |jq '.[0]')
 
   pubk=$($SAFE_BIN/safe keys create  --json| jq '.[0]') 
   wurl=$( $SAFE_BIN/safe wallet create --json)
-  echo $acct > $BASENAME_$i.txt
-  echo $pubk >> $BASENAME_$i.txt
-  echo $wurl >> $BASENAME_$ii.txt
+  echo $acct > $BASENAME$i.txt
+  echo $pubk >> $BASENAME$i.txt
+  echo $wurl >> $BASENAME$i.txt
   echo "----------------------------------------------------"
   echo ""
 done
