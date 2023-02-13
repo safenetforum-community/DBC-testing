@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 # runs initial safe commands to start a clean network 
 # create a master wallet to hold genesis DBC

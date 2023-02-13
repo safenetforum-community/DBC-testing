@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 # creates "user accounts" for testing
 # create a keypair and wallet for each "user" 
@@ -25,7 +25,7 @@ check_stash () {
 }
 
 init_accts () {
-  #[ ! -d "$ACCTS" ] && mkdir $ACCTS  
+  [ ! -d "$ACCTS" ] && mkdir $ACCTS  
   cd $ACCTS
   rm -v *.txt
   sleep 2
@@ -50,10 +50,12 @@ get_accts_qty () {
 
 create_accts () {
   cd $ACCTS
-  for i in {11..14}
+  for i in $(seq 20 $ACCTS_QTY);
+  #for (( i=$START; c<=$ACCTS_QTY; i++ ))
   do 
     touch account_$i.txt
-    acct=$($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
+    #acct=$($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
+    acct=$($SAFE_BIN/safe nrs register --json account_$i| jq '.[2][2]')
     pubk=$($SAFE_BIN/safe keys create  --json| jq '.[0]') 
     wurl=$( $SAFE_BIN/safe wallet create --json)
     echo "----- " account_$i " --------------------------------------"
@@ -78,14 +80,14 @@ payout () {
     pubk=$( tail -n 2 $files | head -n1)
     wurl=$( tail -n 1 $files)
     echo "---------- print  nrs_acct, pubk, wurl ---------------"
-    echo $nrs_acct
-    echo $pubk
+    safe cat $nrs_acct
+    #echo "Account URL: " $nrs_acct
+    echo "Public Key: " $pubk
     wurl=$(echo $wurl| sed 's/^\"\|\"$//g')
-    echo $wurl
-
+    echo "Wallet URL: " $wurl
+  
     #everyone should get a slice of pi
     $SAFE_BIN/safe wallet reissue --json --from $STASH 3.1415922 > ./dbc
-    ls -l >./dbc
     $SAFE_BIN/safe wallet deposit --json --dbc ./dbc $wurl 
     echo $($SAFE_BIN/safe wallet balance $STASH)
     echo "----------------------------------------------------"
