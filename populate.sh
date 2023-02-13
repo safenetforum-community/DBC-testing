@@ -50,21 +50,20 @@ get_accts_qty () {
 
 create_accts () {
   cd $ACCTS
-  for i in $(seq 20 $ACCTS_QTY);
-  #for (( i=$START; c<=$ACCTS_QTY; i++ ))
+  for i in $(seq 1 $ACCTS_QTY);
   do 
-    touch account_$i.txt
-    #acct=$($SAFE_BIN/safe nrs register --json account_$i |jq '.[0]')
+    #touch account_$i.txt
+  
     acct=$($SAFE_BIN/safe nrs register --json account_$i| jq '.[2][2]')
     pubk=$($SAFE_BIN/safe keys create  --json| jq '.[0]') 
-    wurl=$( $SAFE_BIN/safe wallet create --json)
-    echo "----- " account_$i " --------------------------------------"
+    wurl=$($SAFE_BIN/safe wallet create --json)
+    echo "-------------------------------------------"
     echo $acct > account_$i.txt
     echo $pubk >> account_$i.txt
     echo $wurl >> account_$i.txt
-    echo $acct
-    echo $pubk
-    echo $wurl
+    echo "Account name: "$acct
+    echo "Public key: "$pubk
+    echo "Wallet URL: "$wurl
     echo "----------------------------------------------------"
     echo ""
     #payout
